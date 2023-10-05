@@ -69,8 +69,8 @@ Chat Title
   padding: 10px 10px 10px 50px;
 }
 .chat-title h1, .chat-title h2 {
-  font-weight: normal;
-  font-size: 14px;
+  font-weight: bold;
+  font-size: 18px;
   margin: 0;
   padding: 0;
 }
