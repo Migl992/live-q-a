@@ -26,10 +26,20 @@ function insertMessage() {
   if ($.trim(msg) == '') {
     return false;
   }
-  $('<div class="message message-personal">' + msg + '</div>').appendTo($('.mCSB_container')).addClass('new');
+
+  // Check if the message is a response to a previous message
+  if (i % 2 == 0) {
+    // If it's an even number message, it's a response
+    $('<div class="message new response-blue"><div class="message-text">' + msg + '</div></div>').appendTo($('.mCSB_container'));
+  } else {
+    // If it's an odd number message, it's a new thread
+    $('<div class="message message-personal">' + msg + '</div>').appendTo($('.mCSB_container')).addClass('new');
+  }
+
   setDate();
   $('.message-input').val(null);
   updateScrollbar();
+  i++;
 }
 
 $('.message-submit').click(function() {
@@ -42,6 +52,8 @@ $(window).on('keydown', function(e) {
     return false;
   }
 })
+
+
 
 /* var Fake = [
   'Hi there, I\'m Fabio and you?',
