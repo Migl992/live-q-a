@@ -13,7 +13,7 @@ function updateScrollbar() {
   });
 }
 
-function setDate(){
+function setDate() {
   d = new Date()
   if (m != d.getMinutes()) {
     m = d.getMinutes();
@@ -21,25 +21,19 @@ function setDate(){
   }
 }
 
+var isUserMessage = true; // Start with the user's message on the right
+
 function insertMessage() {
-  msg = $('.message-input').val();
+  const msg = $('.message-input').val();
   if ($.trim(msg) == '') {
     return false;
   }
 
-  // Check if the message is a response to a previous message
-  if (i % 2 == 0) {
-    // If it's an even number message, it's a response
-    $('<div class="message new response-blue"><div class="message-text">' + msg + '</div></div>').appendTo($('.mCSB_container'));
-  } else {
-    // If it's an odd number message, it's a new thread
-    $('<div class="message message-personal">' + msg + '</div>').appendTo($('.mCSB_container')).addClass('new');
-  }
+  // Send the message to the server
+  socket.emit('chat message', msg);
 
-  setDate();
-  $('.message-input').val(null);
-  updateScrollbar();
-  i++;
+  // Clear the chat input after sending
+  $('.message-input').val('');
 }
 
 $('.message-submit').click(function() {
@@ -51,7 +45,31 @@ $(window).on('keydown', function(e) {
     insertMessage();
     return false;
   }
-})
+});
+
+// Initialize the Socket.IO client
+var socket = io();
+
+// Receive and display messages from the server
+socket.on('chat message', function(msg) {
+  // Determine whether to display the message on the right or left
+  const messageClass = isUserMessage ? 'message' : 'message new response-blue';
+  
+  // Append the message with the appropriate class
+  $('<div class="' + messageClass + '"><div class="message-text">' + msg + '</div></div>').appendTo($('.mCSB_container'));
+  setDate();
+  updateScrollbar();
+
+  // Toggle the isUserMessage variable for the next message
+  isUserMessage = !isUserMessage;
+});
+
+
+
+
+
+
+
 
 
 

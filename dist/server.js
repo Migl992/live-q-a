@@ -11,11 +11,11 @@ app.use(express.static(__dirname));
 io.on('connection', (socket) => {
   console.log('A user connected');
 
-  // Listen for messages from clients
+  // Handle messages from clients
   socket.on('chat message', (msg) => {
     console.log('Message received: ' + msg);
-    // Broadcast the message to all connected clients
-    io.emit('chat message', msg);
+    // Broadcast the message to all connected clients except the sender
+    socket.broadcast.emit('chat message', msg);
   });
 
   // Handle disconnection
