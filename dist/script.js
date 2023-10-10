@@ -29,6 +29,12 @@ function insertMessage() {
     return false;
   }
 
+  // Append the message to the chat container
+  const messageClass = 'message';
+  $('<div class="' + messageClass + '"><div class="message-text">' + msg + '</div></div>').appendTo($('.mCSB_container'));
+  setDate();
+  updateScrollbar();
+
   // Send the message to the server
   socket.emit('chat message', msg);
 
