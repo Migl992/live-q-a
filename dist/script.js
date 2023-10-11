@@ -3,54 +3,49 @@ var $messages = $('.messages-content'),
     i = 0;
 
 $(window).load(function() {
-  $messages.mCustomScrollbar();
+    $messages.mCustomScrollbar();
 });
 
 function updateScrollbar() {
-  $messages.mCustomScrollbar("update").mCustomScrollbar('scrollTo', 'bottom', {
-    scrollInertia: 10,
-    timeout: 0
-  });
+    $messages.mCustomScrollbar("update").mCustomScrollbar('scrollTo', 'bottom', {
+        scrollInertia: 10,
+        timeout: 0
+    });
 }
 
 function setDate() {
-  d = new Date()
-  if (m != d.getMinutes()) {
-    m = d.getMinutes();
-    $('<div class="timestamp">' + d.getHours() + ':' + m + '</div>').appendTo($('.message:last'));
-  }
-}
-
-var isUserMessage = true; // Start with the user's message on the right
-
-function insertMessage() {
-  const msg = $('.message-input').val();
-  if ($.trim(msg) == '') {
-    return false;
-  }
-
-  // Append the message to the chat container
-  const messageClass = 'message';
-  $('<div class="' + messageClass + '"><div class="message-text">' + msg + '</div></div>').appendTo($('.mCSB_container'));
-  setDate();
-  updateScrollbar();
-
-  // Send the message to the server
-  socket.emit('chat message', msg);
-
-  // Clear the chat input after sending
-  $('.message-input').val('');
+    d = new Date();
+    if (m != d.getMinutes()) {
+        m = d.getMinutes();
+        $('<div class="timestamp">' + d.getHours() + ':' + m + '</div>').appendTo($('.message:last'));
+    }
 }
 
 $('.message-submit').click(function() {
-  insertMessage();
+    const msg = $('.message-input').val();
+    if ($.trim(msg) == '') {
+        return false;
+    }
+    insertMessage(msg, true); // Display user message on the right
+    // Send the message to the server
+    socket.emit('chat message', msg);
+    // Clear the chat input after sending
+    $('.message-input').val('');
 });
 
 $(window).on('keydown', function(e) {
-  if (e.which == 13) {
-    insertMessage();
-    return false;
-  }
+    if (e.which == 13) {
+        const msg = $('.message-input').val();
+        if ($.trim(msg) == '') {
+            return false;
+        }
+        insertMessage(msg, true); // Display user message on the right
+        // Send the message to the server
+        socket.emit('chat message', msg);
+        // Clear the chat input after sending
+        $('.message-input').val('');
+        return false;
+    }
 });
 
 // Initialize the Socket.IO client
@@ -58,17 +53,17 @@ var socket = io();
 
 // Receive and display messages from the server
 socket.on('chat message', function(msg) {
-  // Determine whether to display the message on the right or left
-  const messageClass = isUserMessage ? 'message' : 'message new response-blue';
-  
-  // Append the message with the appropriate class
-  $('<div class="' + messageClass + '"><div class="message-text">' + msg + '</div></div>').appendTo($('.mCSB_container'));
-  setDate();
-  updateScrollbar();
-
-  // Toggle the isUserMessage variable for the next message
-  isUserMessage = !isUserMessage;
+    insertMessage(msg, false); // Display server message on the right
 });
+
+function insertMessage(message, isUser) {
+    // Append the message to the chat container
+    const messageClass = isUser ? 'message' : 'message new response-blue';
+    $('<div class="' + messageClass + '"><div class="message-text">' + message + '</div></div>').appendTo($('.mCSB_container'));
+    setDate();
+    updateScrollbar();
+}
+
 
 
 
