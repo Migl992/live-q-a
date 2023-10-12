@@ -47,13 +47,28 @@ $(window).on('keydown', function(e) {
         return false;
     }
 });
-
+//admin questions
+$('.question-submit').click(function() {
+    const title = $('.question-input').val();
+    if ($.trim(title) == '') {
+        return false;
+    }
+    insertQuestion(title); // Display title
+    // Send the title to the server
+    socket.emit('title', title);
+    // Clear the chat input after sending
+    $('.question-input').val('');
+});
 // Initialize the Socket.IO client
 var socket = io();
 
 // Receive and display messages from the server
 socket.on('chat message', function(msg) {
     insertMessage(msg, false); // Display server message on the right
+});
+// Receive and display title from the server
+socket.on('title', function(newTitle) {
+    insertQuestion(newTitle);
 });
 
 function insertMessage(message, isUser) {
@@ -62,6 +77,11 @@ function insertMessage(message, isUser) {
     $('<div class="' + messageClass + '"><div class="message-text">' + message + '</div></div>').appendTo($('.mCSB_container'));
     setDate();
     updateScrollbar();
+}
+
+function insertQuestion(title) {
+    // Append the message to the chat container
+    $('.chat-title h1').text(title);
 }
 
 

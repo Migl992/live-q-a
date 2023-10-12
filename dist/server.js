@@ -17,6 +17,11 @@ io.on('connection', (socket) => {
     // Broadcast the message to all connected clients except the sender
     socket.broadcast.emit('chat message', msg);
   });
+  socket.on('title', (title) => {
+    console.log('title received: ' + title);
+    // Broadcast the message to all connected clients except the sender
+    socket.broadcast.emit('title', title);
+  });
 
   // Handle disconnection
   socket.on('disconnect', () => {
