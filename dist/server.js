@@ -5,6 +5,7 @@ const socketIo = require('socket.io');
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
+let block = false;
 
 app.use(express.static(__dirname));
 
@@ -13,19 +14,25 @@ io.on('connection', (socket) => {
 
   // Handle messages from clients
   socket.on('chat message', (msg) => {
-    console.log('Message received: ' + msg);
-    // Broadcast the message to all connected clients except the sender
-    socket.broadcast.emit('chat message', msg);
+    if (!block) {
+        console.log('Message received: ' + msg);
+        // Broadcast the message to all connected clients except the sender
+        socket.broadcast.emit('chat message', msg);
+    }
   });
   socket.on('title', (title) => {
     console.log('title received: ' + title);
     // Broadcast the message to all connected clients except the sender
     socket.broadcast.emit('title', title);
   });
-
   // Handle disconnection
   socket.on('disconnect', () => {
     console.log('A user disconnected');
+  });
+  //one message on
+  socket.on('block', () => {
+    block = !block;
+    console.log('Block mode ' + (block ? 'enabled' : 'disabled'));
   });
 });
 

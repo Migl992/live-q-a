@@ -1,3 +1,8 @@
+
+// Initialize the Socket.IO client
+var socket = io();
+
+
 var $messages = $('.messages-content'),
     d, h, m,
     i = 0;
@@ -59,8 +64,13 @@ $('.question-submit').click(function() {
     // Clear the chat input after sending
     $('.question-input').val('');
 });
-// Initialize the Socket.IO client
-var socket = io();
+
+//admin one message only
+$('.block-messages').click(function() {
+    console.log('blockmessage')
+    // Send the action to the server
+    socket.emit('block');
+});
 
 // Receive and display messages from the server
 socket.on('chat message', function(msg) {
