@@ -76,6 +76,22 @@ $('.block-messages').click(function() {
 socket.on('chat message', function(msg) {
     insertMessage(msg, false); // Display server message on the right
 });
+
+// Request existing messages when a new user connects
+socket.on('connect', function () {
+    socket.emit('request messages');
+  });
+
+// Load existing messages
+socket.on('load messages', function (msgArray) {
+    for (const msg of msgArray) {
+      insertMessage(msg.text, false);
+    }
+});
+
+// Add this code to request existing messages when a new user connects
+socket.emit('request messages');
+
 // Receive and display title from the server
 socket.on('title', function(newTitle) {
     insertQuestion(newTitle);
