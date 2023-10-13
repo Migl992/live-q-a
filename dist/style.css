@@ -116,7 +116,7 @@ body.admin-body {
   border-radius: 10px;
   max-width: 80%;
   width: 80%;
-  height: 40%;
+  height: 60%;
 }
 
 .question-input {
@@ -141,6 +141,24 @@ body.admin-body {
 .question-submit:hover {
   background: #1D7745;
 }
+
+.block-messages {
+  background: #920204;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.2s ease;
+  margin-top: 5px;
+}
+
+.block-messages:hover {
+  background: #cf0bab;
+}
+
+
 
 /*--------------------
 Messages
