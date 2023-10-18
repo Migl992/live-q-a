@@ -43,9 +43,22 @@ io.on('connection', (socket) => {
     console.log('Block mode ' + (block ? 'enabled' : 'disabled'));
   });
   // Request existing messages
-  socket.on('request messages', () => {
+/*   socket.on('request messages', () => {
     socket.emit('load messages', messages);
-  });
+  }); */
+//delete messages
+socket.on('delete messages', () => {
+  if (!block) {
+      // Delete all messages in the array
+      messages.length = 0;
+
+      // Broadcast the action to all connected clients
+      io.emit('messages deleted');
+
+      // Emit a reload event to the client page
+      io.emit('reload client');
+  }
+});
 
 });
 

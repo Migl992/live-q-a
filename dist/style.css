@@ -158,6 +158,22 @@ body.admin-body {
   background: #cf0bab;
 }
 
+.delete-messages {
+  background: #920204;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.2s ease;
+  margin-top: 5px;
+}
+
+.delete-messages:hover {
+  background: #cf0bab;
+}
+
 
 
 /*--------------------

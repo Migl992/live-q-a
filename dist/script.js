@@ -72,6 +72,12 @@ $('.block-messages').click(function() {
     socket.emit('block');
 });
 
+//delete messages
+$('.message-delete').click(function() {
+    // Send a request to the server to delete messages
+    socket.emit('delete messages');
+});
+
 // Receive and display messages from the server
 socket.on('chat message', function(msg) {
     insertMessage(msg, false); // Display server message on the right
@@ -95,6 +101,22 @@ socket.emit('request messages');
 // Receive and display title from the server
 socket.on('title', function(newTitle) {
     insertQuestion(newTitle);
+});
+
+socket.on('messages deleted', function() {
+    // Clear the chat messages on the client-side
+    $('.messages-content').empty();
+    // Destroy and reinitialize mCustomScrollbar
+    updateScrollbar();
+    // Reload the page after a brief delay (adjust the delay as needed)
+    setTimeout(function() {
+        location.reload();
+    }, 1000); // Reload the page after 1 second
+});
+
+socket.on('reload client', function() {
+    // Reload the client page
+    location.reload();
 });
 
 function insertMessage(message, isUser) {
