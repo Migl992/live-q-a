@@ -57,7 +57,7 @@ $(window).on('keydown', function(e) {
 
 $(document).ready(function () {
     // Check if the title is already stored in localStorage
-    const storedTitle = localStorage.getItem('adminTitle');
+    const storedTitle = sessionStorage.getItem('adminTitle');
   
     if (storedTitle) {
       // If the title is stored, display it in the chat-title
@@ -71,7 +71,7 @@ $('.question-submit').click(function() {
     }
     insertQuestion(title); // Display title
     // Store the title in localStorage
-    localStorage.setItem('adminTitle', title);
+    sessionStorage.setItem('adminTitle', title);
     // Send the title to the server
     socket.emit('title', title);
     // Clear the chat input after sending
