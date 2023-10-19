@@ -26,6 +26,8 @@ function setDate() {
     }
 }
 
+
+
 $('.message-submit').click(function() {
     const msg = $('.message-input').val();
     if ($.trim(msg) == '') {
@@ -52,6 +54,15 @@ $(window).on('keydown', function(e) {
         return false;
     }
 });
+
+$(document).ready(function () {
+    // Check if the title is already stored in localStorage
+    const storedTitle = localStorage.getItem('adminTitle');
+  
+    if (storedTitle) {
+      // If the title is stored, display it in the chat-title
+      insertQuestion(storedTitle);
+    }
 //admin questions
 $('.question-submit').click(function() {
     const title = $('.question-input').val();
@@ -59,10 +70,14 @@ $('.question-submit').click(function() {
         return false;
     }
     insertQuestion(title); // Display title
+    // Store the title in localStorage
+    localStorage.setItem('adminTitle', title);
     // Send the title to the server
     socket.emit('title', title);
     // Clear the chat input after sending
     $('.question-input').val('');
+});
+
 });
 
 //admin one message only
