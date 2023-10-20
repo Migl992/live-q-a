@@ -26,13 +26,24 @@ function setDate() {
     }
 }
 
-
+var isSlowDownActive = false;
+var canSendMessage = true;
 
 $('.message-submit').click(function() {
     const msg = $('.message-input').val();
     if ($.trim(msg) == '') {
         return false;
     }
+
+    // Check if slow down is active
+    if (isSlowDownActive && !canSendMessage) {
+        alert('Slow down is active. Please wait before sending another message.');
+        return false;
+    }
+
+    canSendMessage = false;
+    setTimeout(enableSendMessage, 30000); // Re-enable messaging after 30 seconds
+
     insertMessage(msg, true); // Display user message on the right
     // Send the message to the server
     socket.emit('chat message', msg);
@@ -93,6 +104,13 @@ $('.message-delete').click(function() {
     socket.emit('delete messages');
 });
 
+//slowdown action
+$('.slow-down').click(function() {
+    console.log('slowdown');
+    // Send the action to the server to activate the slow down
+    socket.emit('toggle slow down');
+});
+
 // Receive and display messages from the server
 socket.on('chat message', function(msg) {
     insertMessage(msg, false); // Display server message on the right
@@ -132,7 +150,16 @@ socket.on('messages deleted', function() {
 socket.on('reload client', function() {
     // Reload the client page
     location.reload();
+}); 
+
+// Listen for the "slow down activated" event from the server
+socket.on('slow down state', function(state) {
+    isSlowDownActive = state;
 });
+
+function enableSendMessage() {
+    canSendMessage = true;
+}
 
 function insertMessage(message, isUser) {
     // Append the message to the chat container

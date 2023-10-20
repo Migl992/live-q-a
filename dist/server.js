@@ -9,6 +9,10 @@ let block = false;
 const messages = [];
 const messageTimeout = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
+  // Initialize the slow down state to false
+let isSlowDownActive = false;
+let lastMessageTimestamp = 0;
+
 app.use(express.static(__dirname));
 
 io.on('connection', (socket) => {
@@ -19,6 +23,17 @@ io.on('connection', (socket) => {
 
   // Handle messages from clients
   socket.on('chat message', (msg) => {
+
+    if (isSlowDownActive) {
+      const currentTime = Date.now();
+      if (currentTime - lastMessageTimestamp < 30000) { // 30 seconds
+          socket.emit('slow down message', 'The slow down is active: you can send a message every 30 seconds');
+          return;
+      }
+
+      lastMessageTimestamp = currentTime;
+    }    
+    
     if (!block) {
         console.log('Message received: ' + msg);
         // Add the message to the messages array
@@ -43,8 +58,8 @@ io.on('connection', (socket) => {
     console.log('Block mode ' + (block ? 'enabled' : 'disabled'));
   });
 
-//delete messages
-socket.on('delete messages', () => {
+  //delete messages
+  socket.on('delete messages', () => {
   if (!block) {
       // Delete all messages in the array
       messages.length = 0;
@@ -55,7 +70,15 @@ socket.on('delete messages', () => {
       // Emit a reload event to the client page
       io.emit('reload client');
   }
-});
+  });
+
+  // Handle the "activate slow down" action from the admin
+  socket.on('toggle slow down', () => {
+    isSlowDownActive = !isSlowDownActive; // Toggle the slow down state
+    consol.log('is slow down Active', isSlowDownActive)
+    // Broadcast the action to all connected clients
+    io.emit('slow down state', isSlowDownActive);
+  });
 
 });
 

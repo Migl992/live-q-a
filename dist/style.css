@@ -174,6 +174,22 @@ body.admin-body {
   background: #cf0bab;
 }
 
+.slow-down {
+  background: #f59e06;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.2s ease;
+  margin-top: 5px;
+}
+
+.slow-down:hover {
+  background: #cf0bab;
+}
+
 
 
 /*--------------------
