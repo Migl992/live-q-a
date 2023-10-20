@@ -37,7 +37,7 @@ $('.message-submit').click(function() {
 
     // Check if slow down is active
     if (isSlowDownActive && !canSendMessage) {
-        alert('Slow down is active. Please wait before sending another message.');
+        alert('Slow down is active. You can send a message evry 30 seconds');
         return false;
     }
 
