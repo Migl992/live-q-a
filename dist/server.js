@@ -42,10 +42,7 @@ io.on('connection', (socket) => {
     block = !block;
     console.log('Block mode ' + (block ? 'enabled' : 'disabled'));
   });
-  // Request existing messages
-/*   socket.on('request messages', () => {
-    socket.emit('load messages', messages);
-  }); */
+
 //delete messages
 socket.on('delete messages', () => {
   if (!block) {
