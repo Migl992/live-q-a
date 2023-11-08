@@ -59,7 +59,7 @@ $(window).on('keydown', function(e) {
         }
         // Check if slow down is active
         if (isSlowDownActive && !canSendMessage) {
-            alert('Slow down is active. You can send a message evry 30 seconds');
+            alert('Slow down is active. You can send a message every 30 seconds');
             return false;
         }
 
