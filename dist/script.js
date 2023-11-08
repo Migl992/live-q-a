@@ -57,6 +57,15 @@ $(window).on('keydown', function(e) {
         if ($.trim(msg) == '') {
             return false;
         }
+        // Check if slow down is active
+        if (isSlowDownActive && !canSendMessage) {
+            alert('Slow down is active. You can send a message evry 30 seconds');
+            return false;
+        }
+
+        canSendMessage = false;
+        setTimeout(enableSendMessage, 30000); // Re-enable messaging after 30 seconds
+
         insertMessage(msg, true); // Display user message on the right
         // Send the message to the server
         socket.emit('chat message', msg);
@@ -165,7 +174,7 @@ function insertMessage(message, isUser) {
     // Append the message to the chat container
     const messageClass = isUser ? 'message' : 'message new response-blue';
     $('<div class="' + messageClass + '"><div class="message-text">' + message + '</div></div>').appendTo($('.mCSB_container'));
-    setDate();
+    //setDate();
     updateScrollbar();
 }
 
