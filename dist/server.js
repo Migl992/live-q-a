@@ -12,42 +12,35 @@ const messageTimeout = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
   // Initialize the slow down state to false
 let isSlowDownActive = false;
 let lastMessageTimestamp = 0;
-const slowDownStates = {};
 
 app.use(express.static(__dirname));
 
 io.on('connection', (socket) => {
   console.log('A user connected');
 
-  // Initialize the slowdown state for this user
-  slowDownStates[socket.id] = {
-    isSlowDownActive: false,
-    lastMessageTimestamp: 0,
-  };
   // Send existing messages to the new user
   socket.emit('load messages', messages);
 
   // Handle messages from clients
   socket.on('chat message', (msg) => {
-    const userSlowDownState = slowDownStates[socket.id];
-    
-    if (userSlowDownState.isSlowDownActive) {
+
+    if (isSlowDownActive) {
       const currentTime = Date.now();
-      if (currentTime - userSlowDownState.lastMessageTimestamp < 30000) { // 30 seconds
-        socket.emit('slow down message', 'Please wait 30 seconds before sending another message.');
-        return;
+      if (currentTime - lastMessageTimestamp < 30000) { // 30 seconds
+          socket.emit('slow down message', 'Please wait 30 seconds before sending another message.');
+          return;
       }
 
-      userSlowDownState.lastMessageTimestamp = currentTime;
-    }
-
+      lastMessageTimestamp = currentTime;
+    }    
+    
     if (!block) {
-      console.log('Message received: ' + msg);
-      // Add the message to the messages array
-      messages.push({ text: msg, timestamp: Date.now() });
+        console.log('Message received: ' + msg);
+        // Add the message to the messages array
+        messages.push({ text: msg, timestamp: Date.now() });
 
-      // Broadcast the message to all connected clients except the sender
-      socket.broadcast.emit('chat message', msg);
+        // Broadcast the message to all connected clients except the sender
+        socket.broadcast.emit('chat message', msg);
     }
   });
   socket.on('title', (title) => {
@@ -81,11 +74,10 @@ io.on('connection', (socket) => {
 
   // Handle the "activate slow down" action from the admin
   socket.on('toggle slow down', () => {
-    const userSlowDownState = slowDownStates[socket.id];
-    userSlowDownState.isSlowDownActive = !userSlowDownState.isSlowDownActive; // Toggle the slow down state
-    console.log("is slow down active", userSlowDownState.isSlowDownActive);
+    isSlowDownActive = !isSlowDownActive; // Toggle the slow down state
+    console.log("is slow down active", isSlowDownActive)
     // Broadcast the action to all connected clients
-    io.emit('slow down state', userSlowDownState.isSlowDownActive);
+    io.emit('slow down state', isSlowDownActive);
   });
 
 });
