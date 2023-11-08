@@ -27,7 +27,7 @@ io.on('connection', (socket) => {
     if (isSlowDownActive) {
       const currentTime = Date.now();
       if (currentTime - lastMessageTimestamp < 30000) { // 30 seconds
-          socket.emit('slow down message', 'Please wait 30 seconds before sending another message.');
+          socket.emit('slow down message', 'The slow down is active: you can send a message every 30 seconds');
           return;
       }
 
@@ -75,7 +75,7 @@ io.on('connection', (socket) => {
   // Handle the "activate slow down" action from the admin
   socket.on('toggle slow down', () => {
     isSlowDownActive = !isSlowDownActive; // Toggle the slow down state
-    console.log("is slow down active", isSlowDownActive)
+    consol.log('is slow down Active', isSlowDownActive)
     // Broadcast the action to all connected clients
     io.emit('slow down state', isSlowDownActive);
   });
