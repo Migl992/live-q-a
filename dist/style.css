@@ -55,6 +55,24 @@ Chat
   flex-direction: column;
 }
 
+.chat_admin {
+  position: absolute;
+  top: 24%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  height: 45%;
+  max-height: 90%;
+  z-index: 2;
+  overflow: hidden;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
 /*--------------------
 Chat Title
 --------------------*/
@@ -110,13 +128,23 @@ body.admin-body {
 }
 
 .admin-panel {
-  background: rgba(0, 0, 0, 0.3);
   padding: 20px;
   text-align: center;
-  border-radius: 10px;
-  max-width: 80%;
-  width: 80%;
-  height: 60%;
+  max-width: 90%;
+  position: absolute;
+  top: 72%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  height: 48%;
+  max-height: 90%;
+  z-index: 2;
+  overflow: hidden;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+  justify-content: space-between;
+  flex-direction: column;
 }
 
 .question-input {
